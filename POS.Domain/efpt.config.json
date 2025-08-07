@@ -1,0 +1,138 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "POSContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "MinimumProductVersion": "2.6.0",
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Entities",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "POS.Domain",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Catalog]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CatalogPrice]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CatalogStock]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CatalogStockHistory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Config]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CurrentStock]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Customer]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DailyGrossProfit]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HPP]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Log]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Menu]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Previllage]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Profile]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Purchase]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PurchaseDetail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Reconcile]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ReconcileDetail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Role]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sale]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SaleDetail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Supplier]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserRole]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}
