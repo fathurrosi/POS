@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace POS.Application.Interfaces
 {
-    internal interface IPrevillageRepository
+    public interface IPrevillageRepository
     {
     }
 }

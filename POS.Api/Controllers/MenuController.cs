@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using POS.Application.Interfaces;
 using POS.Domain.Entities;
 using POS.Infrastructure.Repositories;
-using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,54 +11,55 @@ namespace POS.Api.Controllers
     [EnableCors("AllowSpecificMethods")]
     [Route("api/[controller]")]
     [ApiController]
-    public class RoleController : ControllerBase
+    public class MenuController : ControllerBase
     {
-        private readonly ILogger<RoleController> _logger;
-        private readonly IRoleRepository _roleRepository;
+        private readonly ILogger<MenuController> _logger;
+        private readonly IMenuRepository _menuRepository;
 
-        public RoleController(ILogger<RoleController> logger, IRoleRepository roleRepository)
+        public MenuController(ILogger<MenuController> logger, IMenuRepository menuRepository)
         {
             _logger = logger;
-            _roleRepository = roleRepository;
+            _menuRepository = menuRepository;
         }
-        // GET: api/<RoleController>
+        // GET: api/<MenuController>
+        // GET: api/<MenuController>
         [HttpGet]
-        public IEnumerable<Role> Get()
+        public IEnumerable<Menu> Get()
         {
-            IEnumerable<Role> roles = new List<Role>();
+            IEnumerable<Menu> items = new List<Menu>();
             try
             {
-                roles = _roleRepository.GetAll();
+                items = _menuRepository.GetAll();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while retrieving roles.");
+                _logger.LogError(ex, "An error occurred while retrieving items.");
                 //throw; // Re-throw the exception after logging it
             }
-           
-            return roles;
+
+            return items;
         }
 
-        // GET api/<RoleController>/5
+        // GET api/<MenuController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<RoleController>
+        // POST api/<MenuController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/<RoleController>/5
+        // PUT api/<MenuController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<RoleController>/5
+        // DELETE api/<MenuController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

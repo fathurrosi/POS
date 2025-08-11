@@ -1,16 +1,25 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using POS.Presentation.Models;
+using POS.Presentation.Services;
+using POS.Presentation.Services.Interfaces;
 
 namespace POS.Presentation.Controllers
 {
     public class RoleController : Controller
     {
-        // GET: RoleController
-        public ActionResult Index()
+        private IRoleService _RoleService;
+        public RoleController(IRoleService RoleService)
         {
-            return View();
+            _RoleService = RoleService;
         }
+        // GET: RoleController
 
+        public async Task<IActionResult> Index()
+        {
+            List<RoleModel> items = await _RoleService.GetDataAsync();
+            return View(items);
+        }
         // GET: RoleController/Details/5
         public ActionResult Details(int id)
         {

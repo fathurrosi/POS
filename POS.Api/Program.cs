@@ -5,52 +5,26 @@ using Microsoft.Extensions.Options;
 using POS.Application.Interfaces;
 using POS.Infrastructure.Logging;
 using POS.Infrastructure.Repositories;
+using System.Configuration;
 using System.Net;
 
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
+string[] allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
 // Add services to the container.
 
 builder.Services.AddDbContext<POS.Infrastructure.POSContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ILogRepository, LogRepository>();
-
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAll",
-//        builder =>
-//        {
-//            builder.AllowAnyOrigin()
-//                   .AllowAnyMethod()
-//                   .AllowAnyHeader();
-//        });
-//});
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowSpecificMethods",
-//        builder =>
-//        {
-//            builder.AllowAnyOrigin()
-//                   .WithMethods("GET", "POST", "PUT", "DELETE")
-//                   .AllowAnyHeader();
-//        });
-//});
+builder.Services.AddTransient<IRoleRepository, RoleRepository>();
+builder.Services.AddTransient<IMenuRepository, MenuRepository>();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "AllowSpecificMethods",
         policy =>
         {
-            policy.WithOrigins("http://example.com",
-                    "http://www.contoso.com",
-                    "https://cors1.azurewebsites.net",
-                    "https://cors3.azurewebsites.net",
-                    "https://localhost:7111",
-                    "http://localhost:5111",
-                    "http://localhost:2222",
-                    "https://localhost:5001")
+            policy.WithOrigins(allowedOrigins)
             .WithMethods("GET", "POST", "PUT", "DELETE")
             .AllowAnyHeader();
         });
@@ -69,11 +43,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configure Kestrel
-builder.WebHost.ConfigureKestrel(options =>
-{
-    // Set the port
-    options.Listen(IPAddress.Any, 5111);
-});
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    // Set the port
+//    options.Listen(IPAddress.Any, 5111);
+//});
 
 
 var app = builder.Build();
@@ -94,7 +68,6 @@ else
 
 app.UseCors();
 //app.UseCors("AllowSpecificMethods");
-//app.UseCors("AllowAll"); app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 

@@ -39,31 +39,31 @@ namespace POS.Infrastructure.Logging
         {
             if (logLevel == LogLevel.Error)
             {
-                //try
-                //{
-                //    var ipAddress = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
-                //    string? username = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
-                //    if (string.IsNullOrEmpty(ipAddress))
-                //    {
-                //        ipAddress = "Unknown IP";
-                //    }
+                try
+                {
+                    var ipAddress = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+                    string? username = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
+                    if (string.IsNullOrEmpty(ipAddress))
+                    {
+                        ipAddress = "Unknown IP";
+                    }
 
-                //    var logEntry = new Domain.Entities.Log
-                //    {
-                //        LogDate = DateTime.Now,
-                //        ComputerName = Environment.MachineName,
-                //        Ipaddress = ipAddress
-                //    };
-                //    logEntry.LogType = logLevel.ToString();
-                //    logEntry.LogMessage = exception is null ? formatter(state, exception) : $"{formatter(state, exception)} - Exception: {exception.Message}";
-                //    logEntry.Username = string.IsNullOrEmpty(username) ? "System" : username; // You might want to replace this with the actual username if available.
-                //    _logRepository.Create(logEntry);
-                //}
-                //catch (Exception)
-                //{
+                    var logEntry = new Domain.Entities.Log
+                    {
+                        LogDate = DateTime.Now,
+                        ComputerName = Environment.MachineName,
+                        Ipaddress = ipAddress
+                    };
+                    logEntry.LogType = logLevel.ToString();
+                    logEntry.LogMessage = exception is null ? formatter(state, exception) : $"{formatter(state, exception)} - Exception: {exception.Message}";
+                    logEntry.Username = string.IsNullOrEmpty(username) ? "System" : username; // You might want to replace this with the actual username if available.
+                    _logRepository.Create(logEntry);
+                }
+                catch (Exception)
+                {
                     string logMessage = exception is null ? formatter(state, exception) : $"{formatter(state, exception)} - Exception: {exception.Message}";
                     WriteToFile(logMessage);
-                //}
+                }
 
 
             }

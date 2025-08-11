@@ -8,7 +8,6 @@ using POS.Infrastructure.Repositories;
 
 namespace POS.Api.Controllers
 {
-    //[EnableCors("AllowSpecificMethods")]
     [EnableCors("AllowSpecificMethods")]
     [Route("api/[controller]")]
     [ApiController]

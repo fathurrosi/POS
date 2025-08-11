@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using POS.Presentation.Models;
 using POS.Presentation.Services;
+using POS.Presentation.Services.Interfaces;
 
 namespace POS.Presentation.Controllers
 {
     public class UserController : Controller
     {
-        private UserService _userService;        
-        public UserController(UserService userService)
+        private IUserService _userService;        
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }

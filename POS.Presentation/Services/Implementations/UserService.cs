@@ -1,27 +1,16 @@
 ﻿using POS.Presentation.Models;
-using System.Net.Http;
+using POS.Presentation.Services.Interfaces;
 
-namespace POS.Presentation.Services
+namespace POS.Presentation.Services.Implementations
 {
-    public class UserService
+    public class UserService: IUserService
     {
-        //private readonly IHttpClientFactory _httpClientFactory;
+
         private readonly HttpClient _httpClient;
-        public UserService(HttpClient httpClient)
+        public UserService(IHttpClientFactory httpClientFactory)
         {
-            _httpClient= httpClient;
+            _httpClient = httpClientFactory.CreateClient("ApiClient");
         }
-
-        //public async Task<UserModel> GetDataAsync()
-        //{
-        //    var client = _httpClient.CreateClient("MyApi");
-        //    var response = await client.GetAsync("data");
-        //    response.EnsureSuccessStatusCode();
-        //    var data = await response.Content.ReadAsAsync<MyModel>();
-        //    return data;
-        //}
-
-        // GET example
         public async Task<List<UserModel>> GetDataAsync()
         {
             var response = await _httpClient.GetAsync("api/User");
