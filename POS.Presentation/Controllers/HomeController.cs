@@ -1,9 +1,16 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using POS.Presentation.Models;
+using POS.Shared;
 using System.Diagnostics;
 
 namespace POS.Presentation.Controllers
 {
+    //[POSAuthorize("Admin,User")]
+   
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -13,6 +20,7 @@ namespace POS.Presentation.Controllers
             _logger = logger;
         }
 
+        //[POSAuthorize("Admin,User")]
         public IActionResult Index()
         {
             return View();
@@ -23,10 +31,11 @@ namespace POS.Presentation.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        //[HttpPost]
+        public async Task<IActionResult> SignOut()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            await HttpContext.SignOutAsync(Constants.Cookies_Name);
+            return RedirectToAction("Login", "User");
         }
     }
 }

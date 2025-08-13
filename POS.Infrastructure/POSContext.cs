@@ -62,8 +62,12 @@ public partial class POSContext : DbContext
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
+    public virtual DbSet<UserPrevillage> UserPrevillages { get; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<UserPrevillage>().HasNoKey().ToView("v_UserPrevillage");
+
         modelBuilder.Entity<Catalog>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_catalog");
@@ -266,7 +270,10 @@ public partial class POSContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Description).IsUnicode(false);
-            entity.Property(e => e.Ico).HasColumnType("image");
+            //entity.Property(e => e.Ico).HasColumnType("image");
+            entity.Property(e => e.Ico)
+            .HasMaxLength(100)
+            .IsUnicode(false);
             entity.Property(e => e.ModifiedBy)
                 .HasMaxLength(50)
                 .IsUnicode(false);

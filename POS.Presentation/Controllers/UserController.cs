@@ -1,114 +1,63 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
+using NuGet.Packaging;
 using POS.Presentation.Models;
 using POS.Presentation.Services;
 using POS.Presentation.Services.Interfaces;
+using POS.Shared;
+using POS.Shared.Extentions;
+using System.Security.Claims;
 
 namespace POS.Presentation.Controllers
 {
+    //[Authorize]
     public class UserController : Controller
     {
-        private IUserService _userService;        
+        private IUserService _userService;
         public UserController(IUserService userService)
         {
             _userService = userService;
         }
 
-        
+
         public async Task<IActionResult> Index()
         {
             List<UserModel> items = await _userService.GetDataAsync();
             return View(items);
         }
-        
 
-        ////GET: UserController
-        //public ActionResult Index()
-        //{
-        //    _userService.GetDataAsync().ContinueWith(task =>
-        //    {
-        //        if (task.IsCompletedSuccessfully)
-        //        {
-        //            var users = task.Result;
-        //            // Do something with the users, e.g., pass to the view
-        //            ViewBag.Users = users;
-        //        }
-        //        else
-        //        {
-        //            // Handle error
-        //            ViewBag.Error = "Failed to load users.";
-        //        }
-        //    });
-        //    return View();
-        //}
-
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Login()
         {
             return View();
         }
 
-        // GET: UserController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UserController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Login(UserModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                UserModel user = await _userService.GetById(model.Username);
+                //string pass = BCryptPasswordHasher.HashPassword(model.Password);
+                if (user != null && BCryptPasswordHasher.VerifyPassword(model.Password, user.Password))
+                {
+
+                    var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Username), new Claim(ClaimTypes.Role, "Administrator"), };
+                    var identity = new ClaimsIdentity(claims, POS.Shared.Constants.Cookies_Name);
+                    var principal = new ClaimsPrincipal(identity);
+                    await HttpContext.SignInAsync(principal);
+
+                    return RedirectToAction("Index", "Home");
+                }
+
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(model);
         }
 
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

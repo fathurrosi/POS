@@ -1,5 +1,6 @@
 ﻿using POS.Presentation.Models;
 using POS.Presentation.Services.Interfaces;
+using System.Collections.Generic;
 
 namespace POS.Presentation.Services.Implementations
 {
@@ -13,10 +14,19 @@ namespace POS.Presentation.Services.Implementations
 
         public async Task<List<MenuModel>> GetDataAsync()
         {
-            var response = await _httpClient.GetAsync("api/Menu");
-            response.EnsureSuccessStatusCode(); // Throws an exception if not a success status code
-            var result = await response.Content.ReadFromJsonAsync<List<MenuModel>>();
-            return result ?? new List<MenuModel>();
+            List<MenuModel> list = new List<MenuModel>();
+            try
+            {
+                var response = await _httpClient.GetAsync("api/Menu");
+                response.EnsureSuccessStatusCode(); // Throws an exception if not a success status code
+                list = await response.Content.ReadFromJsonAsync<List<MenuModel>>();
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return list;
         }
 
         internal object GetMenuItems()

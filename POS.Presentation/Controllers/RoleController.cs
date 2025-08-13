@@ -1,22 +1,36 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using POS.Presentation.Models;
 using POS.Presentation.Services;
 using POS.Presentation.Services.Interfaces;
+using POS.Shared;
 
 namespace POS.Presentation.Controllers
 {
+    //[POSAuthorize("User")]
+    [Authorize]
     public class RoleController : Controller
     {
         private IRoleService _RoleService;
-        public RoleController(IRoleService RoleService)
+        protected IAuthorizationService _AuthorizationService { get; }
+        public RoleController(IRoleService RoleService, IAuthorizationService authorizationService)
         {
             _RoleService = RoleService;
+            _AuthorizationService = authorizationService;
         }
         // GET: RoleController
 
+        //[POSAuthorize("User")]
         public async Task<IActionResult> Index()
         {
+            //var isAuthorized = await _AuthorizationService.AuthorizeAsync(User, null, ContactOperations.Create);
+            //if (!isAuthorized.Succeeded)
+            //{
+            //    return Forbid();
+            //}
+
+
             List<RoleModel> items = await _RoleService.GetDataAsync();
             return View(items);
         }

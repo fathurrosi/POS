@@ -28,19 +28,7 @@ namespace POS.Api.Controllers
             List<User> users = new List<User>();
             try
             {
-                users = _userRepository.GetAll();
-                //for (int i = 0; i < 10; i++)
-                //{
-                //    users.Add(new Domain.Entities.User
-                //    {
-                //        Username = "testuser" + i.ToString(),
-                //        Password = "testpassword" + i.ToString(),
-                //        LastLogin = DateTime.Now,
-                //        IsLogin = true,
-                //        Ipaddress = i.ToString()
-                //    });                    
-                //}
-                //_logger.LogError(new Exception(string.Format("Retrieved {0} users from the repository.", users.Count)), string.Format("Retrieved {0} users from the repository.", users.Count));
+                users = _userRepository.GetAll();                
             }
             catch (Exception ex)
             {
@@ -57,7 +45,6 @@ namespace POS.Api.Controllers
             try
             {
                 user = _userRepository.GetByKey(id);
-                _logger.LogInformation("Retrieved {Count} users from the repository.", user.Username);
             }
             catch (Exception ex)
             {

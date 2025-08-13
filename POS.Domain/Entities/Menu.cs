@@ -28,8 +28,9 @@ public partial class Menu
 
     public int? Sequence { get; set; }
 
-    [Column(TypeName = "image")]
-    public byte[] Ico { get; set; }
+    [StringLength(100)]
+    [Unicode(false)]
+    public string Ico { get; set; }
 
     [Unicode(false)]
     public string Description { get; set; }
@@ -57,4 +58,12 @@ public partial class Menu
     public int? Shift { get; set; }
 
     public int? Alt { get; set; }
+
+    [StringLength(100)]
+    [Unicode(false)]
+    public string Route { get; set; }
+
+    [StringLength(100)]
+    [Unicode(false)]
+    public string Action { get; set; }
 }

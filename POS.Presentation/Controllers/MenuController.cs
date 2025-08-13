@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using POS.Presentation.Services;
 using POS.Presentation.Services.Interfaces;
 using System.Threading.Tasks;
 
 namespace POS.Presentation.Controllers
 {
+    [Authorize]
     public class MenuController : Controller
     {
         private IMenuService _menuService;
