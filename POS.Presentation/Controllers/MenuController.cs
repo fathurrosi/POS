@@ -15,7 +15,10 @@ namespace POS.Presentation.Controllers
             _menuService = menuService;
         }
         // GET: RoleController
-
+        public ActionResult Index()
+        {
+            return View();
+        }
         public async Task<IActionResult> DisplayManu()
         {
             var menuItems = await _menuService.GetDataAsync();
