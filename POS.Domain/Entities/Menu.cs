@@ -28,7 +28,7 @@ public partial class Menu
 
     public int? Sequence { get; set; }
 
-    [StringLength(100)]
+    [StringLength(500)]
     [Unicode(false)]
     public string Ico { get; set; }
 

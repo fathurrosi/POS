@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using POS.Application.Interfaces;
 using POS.Domain.Entities;
 using System;
@@ -42,6 +43,13 @@ namespace POS.Infrastructure.Repositories
         public Role GetByKey(int id)
         {
             Role? item = this._context.Roles.Find(id);
+            return item;
+        }
+
+        public Role GetByUsername(string username)
+        {
+            var userParam = new SqlParameter("@User", username);
+            Role? item = _context.Roles.FromSqlInterpolated($"EXECUTE dbo.Usp_GetRoleByUsername @Username=@User").FirstOrDefault();
             return item;
         }
 

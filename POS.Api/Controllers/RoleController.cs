@@ -5,8 +5,6 @@ using POS.Domain.Entities;
 using POS.Infrastructure.Repositories;
 using System.Collections.Generic;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace POS.Api.Controllers
 {
     [EnableCors("AllowSpecificMethods")]
@@ -41,10 +39,21 @@ namespace POS.Api.Controllers
         }
 
         // GET api/<RoleController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{username}")]
+        public Role Get(string username)
         {
-            return "value";
+           Role role = new Role();
+            try
+            {
+                role = _roleRepository.GetByUsername(username);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving roles.");
+                //throw; // Re-throw the exception after logging it
+            }
+
+            return role;
         }
 
         // POST api/<RoleController>

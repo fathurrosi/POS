@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace POS.Presentation.Controllers
 {
-    [Authorize]
+    [Authorize()]
     public class CustomerController : Controller
     {
         public IActionResult Index()

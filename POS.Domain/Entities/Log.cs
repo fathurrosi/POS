@@ -8,13 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace POS.Domain.Entities;
 
-//[Keyless]
 [Table("Log")]
 public partial class Log
 {
     [Key]
     [Column(TypeName = "datetime")]
-    public DateTime? LogDate { get; set; }
+    public DateTime LogDate { get; set; }
 
     [StringLength(100)]
     [Unicode(false)]

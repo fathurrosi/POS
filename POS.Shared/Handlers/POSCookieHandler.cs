@@ -8,7 +8,10 @@ namespace POS.Shared.Handlers
 {
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
+    using Newtonsoft.Json;
+    using POS.Domain.Entities;
     using System;
+    using System.ComponentModel.Design;
     using System.Security.Claims;
 
     public class POSCookieHandler : CookieAuthenticationEvents
@@ -25,6 +28,29 @@ namespace POS.Shared.Handlers
 
         public override Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
+            if (context.Principal?.Identity?.IsAuthenticated == false)
+            {
+                return Task.CompletedTask;
+            }
+
+            string userName = context.Principal?.Identity?.Name;
+            if (context.HttpContext.Request.Cookies.TryGetValue("UserData", out string protectedUserData))
+            {
+                UserData userData = JsonConvert.DeserializeObject<UserData>(Encoding.UTF8.GetString(Convert.FromBase64String(protectedUserData)));
+                if (userData != null && userData.Previllages.Count() > 0)
+                {
+                    // Example: Log the username
+                    Console.WriteLine($"User: {userData.User.Username}, Role: {userData.Role.Name}");
+
+                }
+                else
+                {
+                    context.RejectPrincipal();
+                    //context.Response.Redirect("/Information/Unauthorized");
+
+                    //context.HttpContext.SignOutAsync(Constants.Cookies_Name);
+                }
+            }
             return base.ValidatePrincipal(context);
         }
 
@@ -75,11 +101,13 @@ namespace POS.Shared.Handlers
         //    await base.ValidatePrincipal(context);
         //}
 
-        //private async Task<UserData> GetUserDataAsync(string userId)
-        //{
-        //    // Implement logic to retrieve user data from the database or cache
-        //    // For demonstration purposes, assume a UserData object is returned
-        //    return new UserData { CustomClaimValue = "CustomValue" };
-        //}
+    }
+    public class UserData
+    {
+        // Add other properties as needed based on your application's requirements
+        public User User { get; set; }
+        public Role Role { get; set; }
+        public List<Previllage> Previllages { get; set; }
+        public List<Menu> Menus { get; set; }
     }
 }

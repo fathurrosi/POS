@@ -28,5 +28,13 @@ namespace POS.Presentation.Services.Implementations
             var createdData = await response.Content.ReadFromJsonAsync<RoleModel>();
             return createdData;
         }
+
+        public async Task<RoleModel> GetByUsername(string username)
+        {
+            var response = await _httpClient.GetAsync($"api/Role/{username}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<RoleModel>();
+        }
+
     }
 }

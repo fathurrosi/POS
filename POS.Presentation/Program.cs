@@ -24,6 +24,8 @@ builder.Services.AddHttpClient("ApiClient", client =>
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IMenuService, MenuService>();
+builder.Services.AddTransient<IPrevillageService, PrevillageService>();
+//builder.Services.AddTransient<IMenuService, MenuService>();
 
 builder.Services.AddAuthentication(options =>
 {
