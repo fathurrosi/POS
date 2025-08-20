@@ -1,10 +1,11 @@
-﻿using POS.Presentation.Models;
+﻿using POS.Domain.Entities;
+using POS.Presentation.Models;
 
 namespace POS.Presentation.Services.Interfaces
 {
     public interface IRoleService
     {
-        Task<RoleModel> GetByUsername(string username);
-        Task<List<RoleModel>> GetDataAsync();
+        Task<List<Role>> GetByUsername(string username);
+        Task<List<Role>> GetDataAsync();
     }
 }

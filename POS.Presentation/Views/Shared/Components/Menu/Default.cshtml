@@ -1,6 +1,6 @@
 ﻿@{
-    List<POS.Presentation.Models.MenuModel> items = Model as List<POS.Presentation.Models.MenuModel>;
-    List<POS.Presentation.Models.MenuModel> parents = items.Where(t => !t.ParentId.HasValue || t.ParentId.Value == 0).OrderBy(t=> t.Sequence).ToList();
+    List<POS.Domain.Entities.Menu> items = Model;
+    List<POS.Domain.Entities.Menu> parents = items.Where(t => !t.ParentId.HasValue || t.ParentId.Value == 0).OrderBy(t => t.Sequence).ToList();
 }
 <!--begin::Sidebar Wrapper-->
 <div class="sidebar-wrapper">
@@ -21,9 +21,9 @@
             </li>
  *@
 
-            @foreach (POS.Presentation.Models.MenuModel item in parents)
+            @foreach (POS.Domain.Entities.Menu item in parents)
             {
-                var childItems = items.Where(t => t.ParentId == item.Id).OrderBy(t=> t.Sequence).ToList();
+                var childItems = items.Where(t => t.ParentId == item.Id).OrderBy(t => t.Sequence).ToList();
                 @* <li class="nav-item menu-open"> *@
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -36,8 +36,8 @@
                     @if (childItems.Count > 0)
                     {
                         <ul class="nav nav-treeview">
-                            @foreach (POS.Presentation.Models.MenuModel childItem in childItems)
-                            {    
+                            @foreach (POS.Domain.Entities.Menu childItem in childItems)
+                            {
                                 <li class="nav-item">
                                     <a asp-area="" asp-controller="@childItem.Route" asp-action="@childItem.Action" class="nav-link">
                                         <i class="nav-icon bi bi-circle"></i>
@@ -50,7 +50,7 @@
                 </li>
             }
 
-@* 
+            @* 
             <li class="nav-item menu-open">
                 <a href="#" class="nav-link">
                     <i class="nav-icon bi bi-box-seam-fill"></i>

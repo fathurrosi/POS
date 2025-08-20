@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using POS.Domain.Entities;
 using POS.Presentation.Models;
 using POS.Presentation.Services;
 using POS.Presentation.Services.Interfaces;
@@ -24,8 +25,18 @@ namespace POS.Presentation.Controllers
         //[POSAuthorize("User")]
         public async Task<IActionResult> Index()
         {
-            List<RoleModel> items = await _RoleService.GetDataAsync();
-            return View(items);
+            List<Role> items = await _RoleService.GetDataAsync();       
+            List<RoleModel> roleModels = items.Select(role => new RoleModel
+            {
+                Id = role.Id,
+                Name = role.Name,
+                Description = role.Description,
+                CreatedDate = role.CreatedDate,
+                ModifiedDate = role.ModifiedDate
+            }).ToList();
+            // Check authorization for the current user 
+            
+            return View(roleModels);
         }
         // GET: RoleController/Details/5
         public ActionResult Details(int id)

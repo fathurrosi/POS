@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.Mvc;
+using POS.Domain.Entities;
 using POS.Presentation.Models;
 using POS.Presentation.Services.Implementations;
 using POS.Presentation.Services.Interfaces;
@@ -17,7 +18,7 @@ namespace POS.Presentation.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             // Get menu data from database or elsewhere
-            List<MenuModel> items = await _menuService.GetDataAsync();
+            List<Menu> items = await _menuService.GetDataAsync();
             return View(items);
 
         }

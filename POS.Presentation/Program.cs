@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using POS.Presentation.Services;
 using POS.Presentation.Services.Implementations;
 using POS.Presentation.Services.Interfaces;
+using POS.Shared;
 using POS.Shared.Handlers;
+using System.Configuration;
 using System.Reflection.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-string apiUrl = builder.Configuration.GetValue<string>("AppSettings:ApiBaseUrl");
 
+
+string apiUrl = builder.Configuration.GetValue<string>("AppSettings:ApiBaseUrl");
 builder.Services.AddHttpClient("ApiClient", client =>
 {
     client.BaseAddress = new Uri(apiUrl);
@@ -27,9 +31,12 @@ builder.Services.AddTransient<IMenuService, MenuService>();
 builder.Services.AddTransient<IPrevillageService, PrevillageService>();
 //builder.Services.AddTransient<IMenuService, MenuService>();
 
+builder.Services.AddSingleton(resolver => resolver.GetService<IOptions<PagingSettings>>().Value);
+builder.Services.Configure<PagingSettings>(builder.Configuration.GetSection("Paging"));
+
 builder.Services.AddAuthentication(options =>
 {
-   
+
     options.DefaultScheme = POS.Shared.Constants.Cookies_Name;
     options.DefaultChallengeScheme = POS.Shared.Constants.Cookies_Name;
 })
@@ -37,7 +44,7 @@ builder.Services.AddAuthentication(options =>
 {
     // Cookie settings
     options.LoginPath = "/User/Login";
-    options.EventsType = typeof(POSCookieHandler);    
+    options.EventsType = typeof(POSCookieHandler);
     options.Cookie.HttpOnly = true; // Prevents client-side script access to the cookie
     options.ExpireTimeSpan = TimeSpan.FromMinutes(1); // Sets the cookie expiration time
     options.LoginPath = "/User/Login"; // Path to the login page

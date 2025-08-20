@@ -10,6 +10,7 @@ namespace POS.Shared.Handlers
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Newtonsoft.Json;
     using POS.Domain.Entities;
+    using POS.Domain.Entities.Custom;
     using System;
     using System.ComponentModel.Design;
     using System.Security.Claims;
@@ -22,7 +23,7 @@ namespace POS.Shared.Handlers
         }
 
         public override Task SigningIn(CookieSigningInContext context)
-        {
+        {    
             return base.SigningIn(context);
         }
 
@@ -40,15 +41,12 @@ namespace POS.Shared.Handlers
                 if (userData != null && userData.Previllages.Count() > 0)
                 {
                     // Example: Log the username
-                    Console.WriteLine($"User: {userData.User.Username}, Role: {userData.Role.Name}");
+                    Console.WriteLine($"User: {userData.User.Username}, Role: {string.Join(", ", userData.Roles.Select(t => t.Name).ToArray())}");
 
                 }
                 else
                 {
-                    context.RejectPrincipal();
-                    //context.Response.Redirect("/Information/Unauthorized");
-
-                    //context.HttpContext.SignOutAsync(Constants.Cookies_Name);
+                    //context.RejectPrincipal();
                 }
             }
             return base.ValidatePrincipal(context);
@@ -102,12 +100,5 @@ namespace POS.Shared.Handlers
         //}
 
     }
-    public class UserData
-    {
-        // Add other properties as needed based on your application's requirements
-        public User User { get; set; }
-        public Role Role { get; set; }
-        public List<Previllage> Previllages { get; set; }
-        public List<Menu> Menus { get; set; }
-    }
+
 }

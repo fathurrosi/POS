@@ -4,6 +4,7 @@ using POS.Application.Interfaces;
 using POS.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,11 +47,12 @@ namespace POS.Infrastructure.Repositories
             return item;
         }
 
-        public Role GetByUsername(string username)
+        public List<Role> GetByUsername(string username)
         {
-            var userParam = new SqlParameter("@User", username);
-            Role? item = _context.Roles.FromSqlInterpolated($"EXECUTE dbo.Usp_GetRoleByUsername @Username=@User").FirstOrDefault();
-            return item;
+            var userParam = new SqlParameter("@Username", username);
+            //Role? item = _context.Roles.FromSqlRaw($"EXECUTE dbo.Usp_GetRoleByUsername @Username").FirstOrDefault();
+            List<Role> items = _context.Roles.FromSqlRaw("EXECUTE [dbo].[Usp_GetRoleByUsername] @Username", userParam).ToList();
+            return items;
         }
 
         public int Update(Role item)

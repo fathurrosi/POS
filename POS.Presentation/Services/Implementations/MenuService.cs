@@ -1,5 +1,9 @@
-﻿using POS.Presentation.Models;
+﻿using Microsoft.Build.Framework;
+using POS.Domain.Entities;
+using POS.Domain.Entities.Custom;
+using POS.Presentation.Models;
 using POS.Presentation.Services.Interfaces;
+using POS.Shared;
 using System.Collections.Generic;
 
 namespace POS.Presentation.Services.Implementations
@@ -11,27 +15,22 @@ namespace POS.Presentation.Services.Implementations
         {
             _httpClient = httpClientFactory.CreateClient("ApiClient");
         }
-
-        public async Task<List<MenuModel>> GetDataAsync()
+        public async Task<List<Menu>> GetDataAsync()
         {
-            List<MenuModel> list = new List<MenuModel>();
-            try
-            {
-                var response = await _httpClient.GetAsync("api/Menu");
-                response.EnsureSuccessStatusCode(); // Throws an exception if not a success status code
-                list = await response.Content.ReadFromJsonAsync<List<MenuModel>>();
+            var response = await _httpClient.GetAsync("api/Menu");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<Menu>>();
 
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            return list;
         }
 
-        internal object GetMenuItems()
+        public async Task<PagingResult<Menu>> GetPagingAsync(int pageIndex, int pageSize)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.GetAsync($"api/Menu/Paging/{pageIndex}/{pageSize}");
+            response.EnsureSuccessStatusCode();
+            PagingResult<Menu> result = await response.Content.ReadFromJsonAsync<PagingResult<Menu>>();
+
+            return result;
         }
+
     }
 }

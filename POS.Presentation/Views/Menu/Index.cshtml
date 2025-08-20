@@ -1,8 +1,112 @@
-﻿@{
+﻿@model MenuModel
+
+@{
     ViewData["Title"] = "Home Page";
+    var items = Model.Items;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                @* <h3 class="card-title">Users Data</h3> *@
+                <a asp-action="Create" class="card-title">Create New</a>
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                id
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                CreatedDate
+                            </th>
+                            <th>
+                                CreatedBy
+                            </th>
+                            <th>
+                                ModifiedDate
+                            </th>
+                            <th>
+                                ModifiedBy
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in items)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Id)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedBy)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ModifiedDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ModifiedBy)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-end">
+                    @if (Model.HasPreviousPage)
+                    {
+                        <li class="page-item">
+                            <a asp-action="Index" asp-route-pageIndex="1" class="page-link">&laquo;</a>
+                        </li>
+                    }
+
+                    @if (Model.TotalPages > 0)
+                    {
+                        for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item">
+                                <a asp-action="Index" asp-route-pageIndex="@i" class="page-link">@i</a>
+                            </li>
+                        }
+                    }
+                    @if (Model.HasNextPage)
+                    {
+                        <li class="page-item">
+                            <a asp-action="Index" asp-route-pageIndex="@Model.TotalPages" class="page-link">&raquo;</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
 </div>

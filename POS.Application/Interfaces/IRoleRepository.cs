@@ -9,7 +9,7 @@ namespace POS.Application.Interfaces
 {
     public interface IRoleRepository
     {
-        Role GetByUsername(string username);
+        List<Role> GetByUsername(string username);
         Role GetByKey(int id);
         List<Role> GetAll();
         int Create(Role item);

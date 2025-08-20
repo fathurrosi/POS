@@ -8,6 +8,7 @@ using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using NuGet.Packaging;
 using POS.Domain.Entities;
+using POS.Domain.Entities.Custom;
 using POS.Presentation.Models;
 using POS.Presentation.Services;
 using POS.Presentation.Services.Interfaces;
@@ -49,7 +50,7 @@ namespace POS.Presentation.Controllers
             if (ModelState.IsValid)
             {
                 UserModel user = await _userService.GetById(model.Username);
-                RoleModel role = await _roleService.GetByUsername(model.Username);
+                List<Role> roles = await _roleService.GetByUsername(model.Username);
                 List<Previllage> previllages = await _previllageService.GetByUsername(model.Username);
                 //string pass = BCryptPasswordHasher.HashPassword(model.Password);
                 if (user != null && BCryptPasswordHasher.VerifyPassword(model.Password, user.Password))
@@ -58,7 +59,7 @@ namespace POS.Presentation.Controllers
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, user.Username),
-                        new Claim(ClaimTypes.Role, role.Name),
+                        new Claim(ClaimTypes.Role,string.Join(",", roles.Select(t=> t.Name).ToArray() )),
                     };
                     var identity = new ClaimsIdentity(claims, POS.Shared.Constants.Cookies_Name);
                     var principal = new ClaimsPrincipal(identity);
@@ -68,7 +69,7 @@ namespace POS.Presentation.Controllers
                     var userData = new UserData
                     {
                         User = user,
-                        Role = role, // Example role, replace with actual role retrieval 
+                        Roles = roles, // Example role, replace with actual role retrieval 
                         Menus = new List<Menu>(), // Example menus, replace with actual menu retrieval
                         Previllages = new List<Previllage>() // Example previllages, replace with actual previllage retrieval   
                     };

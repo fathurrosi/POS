@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using POS.Domain.Entities;
+using POS.Presentation.Models;
 using POS.Presentation.Services;
 using POS.Presentation.Services.Interfaces;
+using POS.Shared;
 using System.Threading.Tasks;
 
 namespace POS.Presentation.Controllers
@@ -9,16 +13,22 @@ namespace POS.Presentation.Controllers
     [Authorize]
     public class MenuController : Controller
     {
-        private IMenuService _menuService;
-        public MenuController(IMenuService menuService)
+        private readonly PagingSettings _pagingSettings;
+        private readonly IMenuService _menuService;
+        public MenuController(IMenuService menuService, PagingSettings pagingSettings)
         {
             _menuService = menuService;
+            _pagingSettings = pagingSettings;
         }
-        // GET: RoleController
-        public ActionResult Index()
+
+        public async Task<IActionResult> Index(int? pageIndex = 1)
         {
-            return View();
+            var result = await _menuService.GetPagingAsync(pageIndex.Value, _pagingSettings.DefaultPageSize);
+
+            return View(new MenuModel(result));
         }
+
+
         public async Task<IActionResult> DisplayManu()
         {
             var menuItems = await _menuService.GetDataAsync();

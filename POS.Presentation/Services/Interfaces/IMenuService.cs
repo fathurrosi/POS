@@ -1,9 +1,13 @@
-﻿using POS.Presentation.Models;
+﻿using POS.Domain.Entities;
+using POS.Domain.Entities.Custom;
+using POS.Presentation.Models;
+using POS.Shared;
 
 namespace POS.Presentation.Services.Interfaces
 {
     public interface IMenuService
     {
-        Task<List<MenuModel>> GetDataAsync();
+        Task<List<Menu>> GetDataAsync();
+        Task<PagingResult<Menu>> GetPagingAsync(int pageIndex, int pageSize);
     }
 }

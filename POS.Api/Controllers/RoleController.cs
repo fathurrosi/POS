@@ -40,12 +40,12 @@ namespace POS.Api.Controllers
 
         // GET api/<RoleController>/5
         [HttpGet("{username}")]
-        public Role Get(string username)
+        public List<Role> Get(string username)
         {
-           Role role = new Role();
+            List<Role> items = new List<Role>();
             try
             {
-                role = _roleRepository.GetByUsername(username);
+                items = _roleRepository.GetByUsername(username);
             }
             catch (Exception ex)
             {
@@ -53,7 +53,7 @@ namespace POS.Api.Controllers
                 //throw; // Re-throw the exception after logging it
             }
 
-            return role;
+            return items;
         }
 
         // POST api/<RoleController>

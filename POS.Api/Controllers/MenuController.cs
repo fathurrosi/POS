@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using POS.Application.Interfaces;
 using POS.Domain.Entities;
+using POS.Domain.Entities.Custom;
 using POS.Infrastructure.Repositories;
+using POS.Shared;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,48 +23,41 @@ namespace POS.Api.Controllers
             _logger = logger;
             _menuRepository = menuRepository;
         }
-        // GET: api/<MenuController>
-        // GET: api/<MenuController>
+
         [HttpGet]
-        public IEnumerable<Menu> Get()
+        public ActionResult<List<Menu>> Get()
         {
-            IEnumerable<Menu> items = new List<Menu>();
             try
             {
-                items = _menuRepository.GetAll();
+                var results = _menuRepository.GetAll();
+                if (results == null) return NotFound();
+                return this.Ok(results);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving items.");
-                //throw; // Re-throw the exception after logging it
+                return this.StatusCode(500, "Internal Server Error");
             }
 
-            return items;
         }
 
-        // GET api/<MenuController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("Paging/{pageIndex}/{pageSize}")]
+        public async Task<ActionResult<PagingResult<Menu>>> GetDataPaging(int pageIndex = 1, int pageSize = 10)
         {
-            return "value";
+            try
+            {
+                var results = await _menuRepository.GetDataPaging(pageIndex, pageSize);
+                if (results == null) return NotFound();
+                return this.Ok(results);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving items.");
+                return this.StatusCode(500, "Internal Server Error");
+            }
+
         }
 
-        // POST api/<MenuController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
 
-        // PUT api/<MenuController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<MenuController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
