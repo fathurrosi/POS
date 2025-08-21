@@ -60,6 +60,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Menu_backup]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Previllage]",
          "ObjectType": 0
       },
@@ -762,10 +766,6 @@
       {
          "Name": "[dbo].[Usp_UpdateUserPassword]",
          "ObjectType": 1
-      },
-      {
-         "Name": "[dbo].[camelCase]",
-         "ObjectType": 2
       }
    ],
    "UiHint": null,

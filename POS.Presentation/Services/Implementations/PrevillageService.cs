@@ -20,12 +20,12 @@ namespace POS.Presentation.Services.Implementations
             return userPrevillages ?? new List<Previllage>();
         }
 
-        public async Task<List<Previllage>> GetByUsername(string username)
+        public async Task<List<VUserPrevillage>> GetByUsername(string username)
         {
             var response = await _httpClient.GetAsync($"api/Previllage/{username}");
             response.EnsureSuccessStatusCode();
-            var userPrevillages = await response.Content.ReadFromJsonAsync<List<Previllage>>();
-            return userPrevillages ?? new List<Previllage>();
+            var userPrevillages = await response.Content.ReadFromJsonAsync<List<VUserPrevillage>>();
+            return userPrevillages ?? new List<VUserPrevillage>();
         }
     }
 }

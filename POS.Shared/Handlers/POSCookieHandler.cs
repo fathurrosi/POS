@@ -23,32 +23,32 @@ namespace POS.Shared.Handlers
         }
 
         public override Task SigningIn(CookieSigningInContext context)
-        {    
+        {
             return base.SigningIn(context);
         }
 
         public override Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
-            if (context.Principal?.Identity?.IsAuthenticated == false)
-            {
-                return Task.CompletedTask;
-            }
+            //if (context.Principal?.Identity?.IsAuthenticated == false)
+            //{
+            //    return Task.CompletedTask;
+            //}
 
-            string? userName = context.Principal?.Identity?.Name;
-            if (context.HttpContext.Request.Cookies.TryGetValue("UserData", out string protectedUserData))
-            {
-                UserData? userData = JsonConvert.DeserializeObject<UserData>(Encoding.UTF8.GetString(Convert.FromBase64String(protectedUserData)));
-                if (userData != null && userData.Previllages.Count() > 0)
-                {
-                    // Example: Log the username
-                    Console.WriteLine($"User: {userData.User.Username}, Role: {string.Join(", ", userData.Roles.Select(t => t.Name).ToArray())}");
+            //string? userName = context.Principal?.Identity?.Name;
+            //if (context.HttpContext.Request.Cookies.TryGetValue("UserData", out string protectedUserData))
+            //{
+            //    UserData? userData = JsonConvert.DeserializeObject<UserData>(Encoding.UTF8.GetString(Convert.FromBase64String(protectedUserData)));
+            //    if (userData != null && userData.Previllages.Count() > 0)
+            //    {
+            //        // Example: Log the username
+            //        Console.WriteLine($"User: {userData.Username}, Role: {string.Join(", ", userData.Roles.ToArray())}");
 
-                }
-                else
-                {
-                    //context.RejectPrincipal();
-                }
-            }
+            //    }
+            //    else
+            //    {
+            //        //context.RejectPrincipal();
+            //    }
+            //}
             return base.ValidatePrincipal(context);
         }
 

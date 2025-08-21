@@ -18,7 +18,12 @@ public partial class VUserPrevillage
 
     [StringLength(100)]
     [Unicode(false)]
-    public string RoleName { get; set; }
+    public string Role { get; set; }
+
+    [Required]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string Menu { get; set; }
 
     [Column("MenuID")]
     public int? MenuId { get; set; }

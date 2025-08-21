@@ -23,11 +23,11 @@ namespace POS.Infrastructure.Repositories
         //    return this._context.SaveChanges();
         //}
 
-        public List<Previllage> GetByUsername(string username)
+        public List<VUserPrevillage> GetByUsername(string username)
         {
             var userParam = new SqlParameter("@Username", username);
             //List<Previllage> items = _context.Previllages.FromSqlInterpolated($"EXECUTE dbo.Usp_GetPrevillageByUsername @Username=@Username").ToList();
-            List<Previllage> items = _context.Previllages.FromSqlRaw("EXECUTE [dbo].[Usp_GetPrevillageByUsername] @Username", userParam).ToList();
+            List<VUserPrevillage> items = _context.VUserPrevillages.FromSqlRaw("EXECUTE [dbo].[Usp_GetUserPrevillageByUsername] @Username", userParam).ToList();
             return items;
         }
     }

@@ -23,9 +23,9 @@ namespace POS.Api.Controllers
         }
 
         [HttpGet("{username}")]
-        public List<Previllage> Get(string username)
+        public List<VUserPrevillage> Get(string username)
         {
-            List<Previllage> items = new List<Previllage>();
+            List<VUserPrevillage> items = new List<VUserPrevillage>();
             try
             {
                 items = _previllageRepository.GetByUsername(username);

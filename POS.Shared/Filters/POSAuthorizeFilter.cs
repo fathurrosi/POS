@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using POS.Domain.Entities;
 using POS.Domain.Entities.Custom;
@@ -12,6 +13,7 @@ using System.Security;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace POS.Shared.Filters
 {
@@ -57,22 +59,26 @@ namespace POS.Shared.Filters
             string username = string.Format("{0}", user.Identity?.Name);
             List<string> roles = user.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
 
-            if (context.Request.Cookies.TryGetValue("UserData", out string protectedUserData))
+            string protectedUserData = context.Session.GetString($"UserData_{username}");
+            //HttpContext.Session.SetString($"UserData_{model.Username}", base64data);
+
+            //if (context.Request.Cookies.TryGetValue("UserData", out string protectedUserData))
+            if (!string.IsNullOrEmpty(protectedUserData))
             {
                 UserData? userData = JsonConvert.DeserializeObject<UserData>(Encoding.UTF8.GetString(Convert.FromBase64String(protectedUserData)));
                 if (userData == null) return false;
 
-                Menu? menuItem = userData.Menus.Where(t => t.Code == _screen).FirstOrDefault();
-                if (menuItem == null) return false;
+                //Menu? menuItem = userData.Menus.Where(t => t.Code == _screen).FirstOrDefault();
+                //if (menuItem == null) return false;
 
-                List<int> roleIdList = userData.Roles.Where(t => roles.Contains(t.Name)).Select(t => t.Id).ToList();
+                //List<int> roleIdList = userData.Roles.Where(t => roles.Contains(t.Name)).Select(t => t.Id).ToList();
 
-                List<Previllage> prevItems = userData.Previllages.Where(t => t.MenuId == menuItem.Id && roleIdList.Contains(t.RoleId)).ToList();
+                List<VUserPrevillage> prevItems = userData.Previllages.Where(t => t.Menu == _screen && roles.Contains(t.Role)).ToList();
                 bool allowRead = prevItems.Where(t => t.AllowRead == true).Any();
                 if (userData != null && userData.Previllages.Count() > 0 && allowRead)
                 {
                     // Example: Log the username
-                    Console.WriteLine($"User: {userData.User.Username}, Role: {string.Join(", ", roles.ToArray())}");
+                    Console.WriteLine($"User: {userData.Username}, Role: {string.Join(", ", roles.ToArray())}");
                     return true;
                 }
                 else

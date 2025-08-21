@@ -5,10 +5,9 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using POS.Domain.Entities;
 
-namespace POS.Infrastructure
-{
-    public partial class POSContext : DbContext
+namespace POS.Infrastructure {
 
+    public partial class POSContext : DbContext
     {
         public POSContext()
         {
@@ -41,6 +40,8 @@ namespace POS.Infrastructure
 
         public virtual DbSet<Menu> Menus { get; set; }
 
+        public virtual DbSet<MenuBackup> MenuBackups { get; set; }
+
         public virtual DbSet<Previllage> Previllages { get; set; }
 
         public virtual DbSet<Profile> Profiles { get; set; }
@@ -68,6 +69,10 @@ namespace POS.Infrastructure
         public virtual DbSet<VCatalogConvertionKgToOtherUnit> VCatalogConvertionKgToOtherUnits { get; set; }
 
         public virtual DbSet<VUserPrevillage> VUserPrevillages { get; set; }
+
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//            => optionsBuilder.UseSqlServer("Data Source=DESKTOP-QIORND0\\MSSQLSERVER2K12;Initial Catalog=POS;User ID=sa;Password=sa123");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -99,6 +104,11 @@ namespace POS.Infrastructure
             modelBuilder.Entity<Menu>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_menu");
+            });
+
+            modelBuilder.Entity<MenuBackup>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<Previllage>(entity =>
@@ -163,7 +173,9 @@ namespace POS.Infrastructure
                 entity.ToView("v_UserPrevillage");
             });
 
+            OnModelCreatingPartial(modelBuilder);
         }
 
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

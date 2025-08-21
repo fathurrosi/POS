@@ -5,7 +5,7 @@ namespace POS.Presentation.Services.Interfaces
 {
     public interface IPrevillageService
     {
-        public Task<List<Previllage>> GetByUsername(string username);
+        public Task<List<VUserPrevillage>> GetByUsername(string username);
         public Task<List<Previllage>> GetByRole(string role);
     }
 }

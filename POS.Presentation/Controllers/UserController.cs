@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using NuGet.Packaging;
@@ -19,6 +20,7 @@ using POS.Shared.Extentions;
 using POS.Shared.Handlers;
 using System.Security.Claims;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace POS.Presentation.Controllers
 {
@@ -27,14 +29,19 @@ namespace POS.Presentation.Controllers
     {
         private IUserService _userService;
         private IRoleService _roleService;
-        private IMenuService _menuService;
+        //private IMenuService _menuService;
         private IPrevillageService _previllageService;
-        public UserController(IUserService userService, IRoleService roleService, IPrevillageService previllageService, IMenuService menuService)
+        private IDistributedCache _cache;
+        public UserController(IUserService userService,
+            IRoleService roleService,
+            IPrevillageService previllageService,
+            IDistributedCache cache)
         {
             _userService = userService;
             _roleService = roleService;
             _previllageService = previllageService;
-            _menuService = menuService;
+            //  _menuService = menuService;
+            _cache = cache;
         }
 
 
@@ -59,8 +66,8 @@ namespace POS.Presentation.Controllers
                 if (user != null && BCryptPasswordHasher.VerifyPassword(model.Password, user.Password))
                 {
                     List<Role> roles = await _roleService.GetByUsername(model.Username);
-                    List<Previllage> previllages = await _previllageService.GetByUsername(model.Username);
-                    List<Menu> menus = await _menuService.GetDataByUsernameAsync(model.Username);
+                    List<VUserPrevillage> previllages = await _previllageService.GetByUsername(model.Username);
+                    //List<Menu> menus = await _menuService.GetDataByUsernameAsync(model.Username);
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, user.Username),
@@ -79,27 +86,29 @@ namespace POS.Presentation.Controllers
                     // Set cookie value
                     var userData = new UserData
                     {
-                        User = user,
-                        Roles = roles,
-                        //Menus = new List<Menu>(),
-                        //Previllages = new List<Previllage>()
-                        Menus = menus,
+                        Username = model.Username,
+                        Roles = roles.Select(t => t.Name).ToList(),
                         Previllages = previllages
                     };
-                    var cookieOptions = new CookieOptions
-                    {
-                        Expires = DateTime.Now.AddDays(30),
-                        Secure = true,
-                        HttpOnly = true,
-                    };
+                    //var cookieOptions = new CookieOptions
+                    //{
+                    //    Expires = DateTime.Now.AddDays(30),
+                    //    Secure = true,
+                    //    HttpOnly = true,
+                    //};
+                    //var cookieData = Encoding.UTF8.GetBytes(base64data);
+                    //var cookieSize = cookieData.Length;
+                    //Response.Cookies.Append("UserData", base64data, cookieOptions);
+
                     var userDataJson = JsonConvert.SerializeObject(userData);
                     var base64data = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userDataJson));
 
-                    var cookieData = Encoding.UTF8.GetBytes(base64data);
-                    var cookieSize = cookieData.Length;
-
-                    Response.Cookies.Append("UserData", base64data, cookieOptions);
-
+                    //await _cache.SetStringAsync("UserData", base64data, new DistributedCacheEntryOptions
+                    //{
+                    //    SlidingExpiration = TimeSpan.FromHours(1)
+                    //});
+                    string sessionKey = $"UserData_{model.Username}";
+                    HttpContext.Session.SetString(sessionKey, base64data);
                     return RedirectToAction("Index", "Home");
                 }
 

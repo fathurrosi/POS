@@ -9,6 +9,6 @@ namespace POS.Application.Interfaces
 {
     public interface IPrevillageRepository
     {
-        public List<Previllage> GetByUsername(string username);
+        public List<VUserPrevillage> GetByUsername(string username);
     }
 }
