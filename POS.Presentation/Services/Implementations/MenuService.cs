@@ -23,6 +23,13 @@ namespace POS.Presentation.Services.Implementations
 
         }
 
+        public async Task<List<Menu>> GetDataByUsernameAsync(string username)
+        {
+            var response = await _httpClient.GetAsync($"api/Menu/{username}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<Menu>>();
+        }
+
         public async Task<PagingResult<Menu>> GetPagingAsync(int pageIndex, int pageSize)
         {
             var response = await _httpClient.GetAsync($"api/Menu/Paging/{pageIndex}/{pageSize}");

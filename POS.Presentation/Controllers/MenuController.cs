@@ -6,11 +6,12 @@ using POS.Presentation.Models;
 using POS.Presentation.Services;
 using POS.Presentation.Services.Interfaces;
 using POS.Shared;
+using POS.Shared.Attribute;
 using System.Threading.Tasks;
 
 namespace POS.Presentation.Controllers
 {
-    [Authorize]
+    [POSAuthorize(screen: Constants.CODE_Menu)]
     public class MenuController : Controller
     {
         private readonly PagingSettings _pagingSettings;

@@ -6,11 +6,11 @@ using POS.Presentation.Models;
 using POS.Presentation.Services;
 using POS.Presentation.Services.Interfaces;
 using POS.Shared;
+using POS.Shared.Attribute;
 
 namespace POS.Presentation.Controllers
 {
-    //[POSAuthorize("User")]
-    [Authorize]
+    [POSAuthorize(screen: Constants.CODE_Role)]
     public class RoleController : Controller
     {
         private IRoleService _RoleService;
@@ -25,7 +25,7 @@ namespace POS.Presentation.Controllers
         //[POSAuthorize("User")]
         public async Task<IActionResult> Index()
         {
-            List<Role> items = await _RoleService.GetDataAsync();       
+            List<Role> items = await _RoleService.GetDataAsync();
             List<RoleModel> roleModels = items.Select(role => new RoleModel
             {
                 Id = role.Id,
@@ -35,7 +35,7 @@ namespace POS.Presentation.Controllers
                 ModifiedDate = role.ModifiedDate
             }).ToList();
             // Check authorization for the current user 
-            
+
             return View(roleModels);
         }
         // GET: RoleController/Details/5

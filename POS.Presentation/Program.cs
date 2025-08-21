@@ -29,18 +29,15 @@ builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IMenuService, MenuService>();
 builder.Services.AddTransient<IPrevillageService, PrevillageService>();
-//builder.Services.AddTransient<IMenuService, MenuService>();
 
 builder.Services.AddSingleton(resolver => resolver.GetService<IOptions<PagingSettings>>().Value);
 builder.Services.Configure<PagingSettings>(builder.Configuration.GetSection("Paging"));
 
 builder.Services.AddAuthentication(options =>
 {
-
     options.DefaultScheme = POS.Shared.Constants.Cookies_Name;
     options.DefaultChallengeScheme = POS.Shared.Constants.Cookies_Name;
-})
-.AddCookie(POS.Shared.Constants.Cookies_Name, options =>
+}).AddCookie(POS.Shared.Constants.Cookies_Name, options =>
 {
     // Cookie settings
     options.LoginPath = "/User/Login";
@@ -53,10 +50,12 @@ builder.Services.AddAuthentication(options =>
     options.SlidingExpiration = true; // Renews the cookie if it's nearing expiration and the user is active
     options.Cookie.Name = POS.Shared.Constants.Cookies_Name; // Optional: Custom cookie name
 });
-
-
 builder.Services.AddScoped<POSCookieHandler>();
-//builder.Services.AddTransient<POSCookieHandler>();
+
+//builder.Services.AddSingleton<IAuthorizationHandler, POSAuthorizeHandler>();
+//builder.Services.AddSingleton<IAuthorizationHandler, POSHandler>();
+
+
 
 
 
@@ -77,7 +76,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

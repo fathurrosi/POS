@@ -41,6 +41,23 @@ namespace POS.Api.Controllers
 
         }
 
+        [HttpGet("{username}")]
+        public ActionResult<List<Menu>> Get(string username)
+        {
+            try
+            {
+                var results = _menuRepository.GetByUsername(username);
+                if (results == null) return NotFound();
+                return this.Ok(results);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving items.");
+                return this.StatusCode(500, "Internal Server Error");
+            }
+
+        }
+
         [HttpGet("Paging/{pageIndex}/{pageSize}")]
         public async Task<ActionResult<PagingResult<Menu>>> GetDataPaging(int pageIndex = 1, int pageSize = 10)
         {

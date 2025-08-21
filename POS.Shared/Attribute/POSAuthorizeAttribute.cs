@@ -1,18 +1,36 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
-
+﻿using Microsoft.AspNetCore.Mvc;
+using POS.Shared.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace POS.Shared.Attribute
 {
-    public class POSAuthorizeAttribute : AuthorizeAttribute, IAuthorizationRequirement
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class POSAuthorizeAttribute : TypeFilterAttribute
     {
-        public string Roles { get; set; }
+        //public POSAuthorizeAttribute(string roles = null, string permissions = null)
+        //: base(typeof(POSAuthorizeFilter))
+        //{
+        //    Arguments = new object[] { new Dictionary<string, object>        {
+        //    {"roles", roles},
+        //    {"permissions", permissions}
+        //}};
+        //}
 
-        public POSAuthorizeAttribute(string roles)
+        public POSAuthorizeAttribute(string screen = null)
+       : base(typeof(POSAuthorizeFilter))
         {
-            Roles = roles;
+            //rguments = new object[] { new Dictionary<string, object> { { "screen", screen } } };
+            Screen = screen;
+            Arguments = new object[] { screen };
         }
+
+        //public string Roles { get; set; }
+        //public string Permissions { get; set; }
+        public string Screen { get; set; }
     }
+
 }

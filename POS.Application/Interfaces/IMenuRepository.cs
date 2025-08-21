@@ -13,7 +13,7 @@ namespace POS.Application.Interfaces
     public interface IMenuRepository
     {
         List<Menu> GetAll();
-
+        List<Menu> GetByUsername(string username);
         public Task<PagingResult<Menu>> GetDataPaging(int pageIndex, int pageSize);
 
     }

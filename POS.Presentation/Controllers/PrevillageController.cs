@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using POS.Shared;
+using POS.Shared.Attribute;
 
 namespace POS.Presentation.Controllers
 {
-    [Authorize]
+    [POSAuthorize(screen: Constants.CODE_Previllage)]
     public class PrevillageController : Controller
     {
         // GET: PrevillageController

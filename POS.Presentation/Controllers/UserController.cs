@@ -11,25 +11,30 @@ using POS.Domain.Entities;
 using POS.Domain.Entities.Custom;
 using POS.Presentation.Models;
 using POS.Presentation.Services;
+using POS.Presentation.Services.Implementations;
 using POS.Presentation.Services.Interfaces;
 using POS.Shared;
+using POS.Shared.Attribute;
 using POS.Shared.Extentions;
 using POS.Shared.Handlers;
 using System.Security.Claims;
+using System.Text;
 
 namespace POS.Presentation.Controllers
 {
-    //[Authorize]
+
     public class UserController : Controller
     {
         private IUserService _userService;
         private IRoleService _roleService;
+        private IMenuService _menuService;
         private IPrevillageService _previllageService;
-        public UserController(IUserService userService, IRoleService roleService, IPrevillageService previllageService)
+        public UserController(IUserService userService, IRoleService roleService, IPrevillageService previllageService, IMenuService menuService)
         {
             _userService = userService;
             _roleService = roleService;
             _previllageService = previllageService;
+            _menuService = menuService;
         }
 
 
@@ -50,17 +55,23 @@ namespace POS.Presentation.Controllers
             if (ModelState.IsValid)
             {
                 UserModel user = await _userService.GetById(model.Username);
-                List<Role> roles = await _roleService.GetByUsername(model.Username);
-                List<Previllage> previllages = await _previllageService.GetByUsername(model.Username);
-                //string pass = BCryptPasswordHasher.HashPassword(model.Password);
+
                 if (user != null && BCryptPasswordHasher.VerifyPassword(model.Password, user.Password))
                 {
-
+                    List<Role> roles = await _roleService.GetByUsername(model.Username);
+                    List<Previllage> previllages = await _previllageService.GetByUsername(model.Username);
+                    List<Menu> menus = await _menuService.GetDataByUsernameAsync(model.Username);
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, user.Username),
-                        new Claim(ClaimTypes.Role,string.Join(",", roles.Select(t=> t.Name).ToArray() )),
                     };
+
+                    roles.ForEach(t =>
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, t.Name));
+                    });
+
+
                     var identity = new ClaimsIdentity(claims, POS.Shared.Constants.Cookies_Name);
                     var principal = new ClaimsPrincipal(identity);
                     await HttpContext.SignInAsync(principal);
@@ -69,9 +80,11 @@ namespace POS.Presentation.Controllers
                     var userData = new UserData
                     {
                         User = user,
-                        Roles = roles, // Example role, replace with actual role retrieval 
-                        Menus = new List<Menu>(), // Example menus, replace with actual menu retrieval
-                        Previllages = new List<Previllage>() // Example previllages, replace with actual previllage retrieval   
+                        Roles = roles,
+                        //Menus = new List<Menu>(),
+                        //Previllages = new List<Previllage>()
+                        Menus = menus,
+                        Previllages = previllages
                     };
                     var cookieOptions = new CookieOptions
                     {
@@ -81,6 +94,10 @@ namespace POS.Presentation.Controllers
                     };
                     var userDataJson = JsonConvert.SerializeObject(userData);
                     var base64data = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userDataJson));
+
+                    var cookieData = Encoding.UTF8.GetBytes(base64data);
+                    var cookieSize = cookieData.Length;
+
                     Response.Cookies.Append("UserData", base64data, cookieOptions);
 
                     return RedirectToAction("Index", "Home");

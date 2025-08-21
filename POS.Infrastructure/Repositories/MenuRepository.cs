@@ -24,9 +24,15 @@ namespace POS.Infrastructure.Repositories
             return this._context.Menus.AsNoTracking().ToList();
         }
 
+        public List<Menu> GetByUsername(string username)
+        {
+            var pUsername = new SqlParameter("@Username", username);
+            return  _context.Menus.FromSqlRaw("exec [dbo].[Usp_GetMenuByUsername] @Username", pUsername).ToList();
+        }
+
         public async Task<PagingResult<Menu>> GetDataPaging(int pageIndex, int pageSize)
         {
-           
+
             var paramText = new SqlParameter("@text", "");
             var paramPageIndex = new SqlParameter("@pageIndex", pageIndex);
             var paramPageSize = new SqlParameter("@pageSize", pageSize);
