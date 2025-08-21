@@ -35,7 +35,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IMenuService, MenuService>();
 builder.Services.AddTransient<IPrevillageService, PrevillageService>();
 
-builder.Services.AddSingleton(resolver => resolver.GetService<IOptions<PagingSettings>>().Value);
+builder.Services.AddSingleton(options => options.GetService<IOptions<PagingSettings>>().Value);
 builder.Services.Configure<PagingSettings>(builder.Configuration.GetSection("Paging"));
 
 builder.Services.AddAuthentication(options =>
@@ -57,13 +57,6 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddScoped<POSCookieHandler>();
 
-//builder.Services.AddSingleton<IAuthorizationHandler, POSAuthorizeHandler>();
-//builder.Services.AddSingleton<IAuthorizationHandler, POSHandler>();
-
-
-
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -76,7 +69,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 app.UseSession();
 app.UseAuthentication();

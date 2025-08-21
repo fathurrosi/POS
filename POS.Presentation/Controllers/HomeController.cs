@@ -37,7 +37,7 @@ namespace POS.Presentation.Controllers
         public async Task<IActionResult> SignOut()
         {   
             await HttpContext.SignOutAsync(Constants.Cookies_Name);
-            Response.Cookies.Delete("UserData");
+            //Response.Cookies.Delete("UserData");
             return RedirectToAction("Login", "User");
         }
     }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +42,7 @@ namespace POS.Shared.Filters
 
             if (!user.Identity.IsAuthenticated)
             {
-                context.Result = new UnauthorizedResult();
+                context.Result = new ChallengeResult();
                 return;
             }
 
@@ -67,11 +69,6 @@ namespace POS.Shared.Filters
             {
                 UserData? userData = JsonConvert.DeserializeObject<UserData>(Encoding.UTF8.GetString(Convert.FromBase64String(protectedUserData)));
                 if (userData == null) return false;
-
-                //Menu? menuItem = userData.Menus.Where(t => t.Code == _screen).FirstOrDefault();
-                //if (menuItem == null) return false;
-
-                //List<int> roleIdList = userData.Roles.Where(t => roles.Contains(t.Name)).Select(t => t.Id).ToList();
 
                 List<VUserPrevillage> prevItems = userData.Previllages.Where(t => t.Menu == _screen && roles.Contains(t.Role)).ToList();
                 bool allowRead = prevItems.Where(t => t.AllowRead == true).Any();

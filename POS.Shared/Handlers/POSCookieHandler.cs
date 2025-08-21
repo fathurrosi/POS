@@ -34,6 +34,13 @@ namespace POS.Shared.Handlers
             //    return Task.CompletedTask;
             //}
 
+            if (context.Principal?.Identity?.IsAuthenticated == false)
+            {
+                context.RejectPrincipal();
+                context.ShouldRenew = true; // This might trigger a new authentication request
+            }
+            return Task.CompletedTask;
+
             //string? userName = context.Principal?.Identity?.Name;
             //if (context.HttpContext.Request.Cookies.TryGetValue("UserData", out string protectedUserData))
             //{
